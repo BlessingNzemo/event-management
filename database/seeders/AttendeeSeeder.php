@@ -29,7 +29,6 @@ class AttendeeSeeder extends Seeder
                 ]);
 
 
-                dd($event->id, $user->id);
             }
         }
     }
