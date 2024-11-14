@@ -16,19 +16,44 @@ class EventController extends Controller
     public function index()
     {
         //
-    //     return response()->json([
-    //         'data' => Event::with('attendees')->get()
-    //     ]);
+        //     return response()->json([
+        //         'data' => Event::with('attendees')->get()
+        //     ]);
 
-    return Attendee::all();
-    // }
+        return Attendee::all();
+        // }
     }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        try {
+            // Valider les données
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after:start_time'
+            ]);
+
+            // Ajouter user_id aux données validées
+            $validated['user_id'] = 1;
+
+            // Créer l'événement
+            $event = Event::create($validated);
+
+            return response()->json([
+                'message' => 'Event created successfully',
+                'data' => $event
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error creating event',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
