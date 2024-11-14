@@ -13,6 +13,7 @@ class AttendeeController extends Controller
     public function index()
     {
         //
+        
     }
 
     /**
