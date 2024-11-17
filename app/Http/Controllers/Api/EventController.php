@@ -59,7 +59,7 @@ class EventController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Error creating event',
+                'message' => 'Erreur survenue lors de la création API',
                 'error' => $e->getMessage()
             ], 500);
         }
