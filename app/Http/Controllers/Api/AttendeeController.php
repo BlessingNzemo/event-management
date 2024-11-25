@@ -63,10 +63,17 @@ class AttendeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Event $event, Attendee $attendee)
-    {
-        //
+    public function destroy(Event $event, $id)
+{
+    try {
+        $attendee = $event->attendees()->findOrFail($id);
         $attendee->delete();
         return response(status: 204);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Erreur lors de la suppression du participant',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 }
