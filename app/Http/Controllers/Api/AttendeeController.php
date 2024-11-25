@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AttendeeResource;
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\Attendee;
 
 class AttendeeController extends Controller
 {
@@ -14,23 +16,40 @@ class AttendeeController extends Controller
     public function index(Event $event)
     {
         //
+        $attendees = $event->attendees()->latest();
 
+        return AttendeeResource::collection(
+            $attendees->paginate()
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Event $event)
     {
         //
+        $attendee = $event->attendees()->create([
+            'user_id' => 1,
+        ]);
+
+        return new AttendeeResource($attendee);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Event $event, $id)
     {
-        //
+        try {
+            $attendee = $event->attendees()->findOrFail($id);
+            return new AttendeeResource($attendee);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération du participant',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -44,8 +63,10 @@ class AttendeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Event $event, Attendee $attendee)
     {
         //
+        $attendee->delete();
+        return response(status: 204);
     }
 }
