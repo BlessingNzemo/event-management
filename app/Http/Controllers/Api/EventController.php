@@ -7,8 +7,9 @@ use App\Http\Traits\CanLoadRelationships;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Http\Resources\EventResource;
+use Illuminate\Routing\Controller as BaseController;
 
-class EventController extends Controller
+class EventController extends BaseController
 {
     use CanLoadRelationships;
 
@@ -16,7 +17,14 @@ class EventController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     *
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
     public function index()
     {
         // Utilisation de la propriété $relations définie dans la classe
@@ -40,7 +48,7 @@ class EventController extends Controller
             ]);
 
             // Ajouter user_id aux données validées
-            $validated['user_id'] = 1;
+            $validated['user_id'] = $request->user()->id;
 
             // Créer l'événement
             $event = Event::create($validated);
