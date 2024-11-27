@@ -7,12 +7,23 @@ use App\Http\Resources\AttendeeResource;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Attendee;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class AttendeeController extends Controller
+class AttendeeController extends BaseController
 {
     /**
      * Display a listing of the resource.
+     *
      */
+
+    use AuthorizesRequests;
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
+        $this->authorizeResource(Attendee::class, 'attendee');
+    }
+
     public function index(Event $event)
     {
         //
@@ -63,17 +74,23 @@ class AttendeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Event $event, $id)
-{
-    try {
-        $attendee = $event->attendees()->findOrFail($id);
-        $attendee->delete();
-        return response(status: 204);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Erreur lors de la suppression du participant',
-            'error' => $e->getMessage()
-        ], 500);
+    public function destroy(Event $event, Attendee $attendee)
+    {
+        // $this->authorize('delete-attendee', [$event, $attendee]);
+
+        // Vérifiez les autorisations
+
+        //$attendee = $event->attendees()->findOrFail($id);
+        $this->authorize('delete-attendee', [$event, $attendee]);
+
+        try {
+            $attendee->delete();
+            return response(status: 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la suppression du participant',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
 }

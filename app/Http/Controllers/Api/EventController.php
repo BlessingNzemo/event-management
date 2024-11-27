@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Http\Resources\EventResource;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Gate;
 
 class EventController extends BaseController
 {
@@ -24,6 +25,7 @@ class EventController extends BaseController
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
+        $this->authorizeResource(Event::class,'event');
     }
     public function index()
     {
@@ -76,7 +78,15 @@ class EventController extends BaseController
      * Update the specified resource in storage.
      */
     public function update(Request $request, Event $event)
-    {
+    {   //Avec la méthode Gate nous allons vérifier si la personne est autorisée à effectuer la tache qu'elle apprete de faire
+        if (Gate::denies('update-event', $event)) {
+            abort(403, "Vous n'etes pas autorisé à faire la mise à jour  de cet événément");
+        }
+
+        //$this->authorize('update-event',$event);
+        //    if (!Gate::allows('update-event', $event)){
+        //     abort(403, "Vous n'etes pas autorisé à faire la mise à jour  de cet événément");
+        //    }
         // Valider les données
         $event->update(
             $request->validate([
