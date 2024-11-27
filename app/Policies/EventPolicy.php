@@ -14,6 +14,7 @@ class EventPolicy
     public function viewAny(User $user): bool
     {
         //
+        return true;
     }
 
     /**
@@ -22,6 +23,7 @@ class EventPolicy
     public function view(User $user, Event $event): bool
     {
         //
+        return true;
     }
 
     /**
@@ -30,6 +32,7 @@ class EventPolicy
     public function create(User $user): bool
     {
         //
+        return true;
     }
 
     /**
@@ -38,6 +41,7 @@ class EventPolicy
     public function update(User $user, Event $event): bool
     {
         //
+        return $user->id === $event->user_id;
     }
 
     /**
@@ -46,21 +50,23 @@ class EventPolicy
     public function delete(User $user, Event $event): bool
     {
         //
+        return $user->id === $event->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Event $event): bool
-    {
-        //
-    }
+    // public function restore(User $user, Event $event): bool
+    // {
+    //     //
+
+    // }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Event $event): bool
-    {
-        //
-    }
+    // public function forceDelete(User $user, Event $event): bool
+    // {
+    //     //
+    // }
 }

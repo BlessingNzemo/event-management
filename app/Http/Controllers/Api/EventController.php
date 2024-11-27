@@ -22,6 +22,14 @@ class EventController extends BaseController
      *
      */
 
+    /**
+     * Set up middleware and resource authorization for the controller.
+     *
+     * This constructor sets up the following middleware:
+     * - `auth:sanctum` for all methods except `index` and `show`
+     *
+     * Additionally, it sets up resource authorization for the `Event` model.
+     */
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
@@ -79,15 +87,17 @@ class EventController extends BaseController
      */
     public function update(Request $request, Event $event)
     {   //Avec la méthode Gate nous allons vérifier si la personne est autorisée à effectuer la tache qu'elle apprete de faire
-        if (Gate::denies('update-event', $event)) {
-            abort(403, "Vous n'etes pas autorisé à faire la mise à jour  de cet événément");
-        }
+        //if (Gate::denies('update-event', $event)) {
+         //   abort(403, "Vous n'etes pas autorisé à faire la mise à jour  de cet événément");
+        //}
 
         //$this->authorize('update-event',$event);
         //    if (!Gate::allows('update-event', $event)){
         //     abort(403, "Vous n'etes pas autorisé à faire la mise à jour  de cet événément");
         //    }
         // Valider les données
+
+
         $event->update(
             $request->validate([
                 'name' => 'sometimes|string|max:255',

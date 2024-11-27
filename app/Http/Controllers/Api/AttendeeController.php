@@ -17,7 +17,7 @@ class AttendeeController extends BaseController
      *
      */
 
-    use AuthorizesRequests;
+    //use AuthorizesRequests;
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
