@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller as Controller;
 use App\Http\Resources\AttendeeResource;
 use Illuminate\Http\Request;
 use App\Models\Event;
@@ -17,12 +17,13 @@ class AttendeeController extends BaseController
      *
      */
 
-    //use AuthorizesRequests;
+    use AuthorizesRequests;
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
         $this->authorizeResource(Attendee::class, 'attendee');
     }
+
 
     public function index(Event $event)
     {
@@ -69,6 +70,7 @@ class AttendeeController extends BaseController
     public function update(Request $request, string $id)
     {
         //
+
     }
 
     /**

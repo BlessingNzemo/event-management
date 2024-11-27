@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\CanLoadRelationships;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Http\Resources\EventResource;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class EventController extends BaseController
 {
+    use AuthorizesRequests;
     use CanLoadRelationships;
-
     private array $relations = ['user', 'attendees', 'attendees.user'];
 
     /**
