@@ -26,13 +26,12 @@ class SendEventReminders extends Command
      */
     public function handle()
     {
-        //
         $events = \App\Models\Event::with('attendees.user')
             ->whereBetween('start_time', [now(), now()->addDay()])
             ->get();
         $eventCount = $events->count();
         $eventLabel = Str::plural('event', $eventCount);
-        $this->info("Found {$eventCount} ${eventLabel}.");
+        $this->info("Found {$eventCount} {$eventLabel}.");
         $events->each(
             fn($event) => $event->attendees->each(
                 fn($attendee) => $this->info("Notifie l'utilisateur {$attendee->user->id}")
@@ -40,5 +39,4 @@ class SendEventReminders extends Command
         );
         $this->info('Les rappels de notification sont envoyés avec succès!');
     }
-
 }
