@@ -2,27 +2,22 @@
 
 namespace App\Console;
 
+use App\Console\Commands\SendEventReminders; // Import your command
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
-
-        $schedule->command('app:send-event-reminders')->everyMinute();
+        // Schedule the app:send-event-reminders command to run daily
+        $schedule->command(SendEventReminders::class)->everyMinute(); // Change to your desired frequency
     }
 
-    /**
-     * Register the commands for the application.
-     */
-    protected function commands(): void
+    protected function commands()
     {
         $this->load(__DIR__.'/Commands');
 
-        require base_path('routes/console.php');
+        // Other command registrations...
     }
 }
