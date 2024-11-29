@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str; // 
+use App\Notifications\EventReminderNotification;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -14,11 +16,15 @@ Artisan::command('app:send-event-reminders', function () {
             ->whereBetween('start_time', [now(), now()->addDay()])
             ->get();
         $eventCount = $events->count();
-        $eventLabel = \Illuminate\Support\Str::plural('event', $eventCount);
+        $eventLabel = Str::plural('event', $eventCount);
         $this->info("Found {$eventCount} {$eventLabel}.");
         $events->each(
             fn($event) => $event->attendees->each(
-                fn($attendee) => $this->info("Notifie l'utilisateur {$attendee->user->id}")
+                fn($attendee) => $attendee->user->notify(
+                    new EventReminderNotification(
+                        $event
+                    )
+                )
             )
         );
         $this->info('Les rappels de notification sont envoyés avec succès!');
